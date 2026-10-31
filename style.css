@@ -12,13 +12,17 @@
 
 #chat .mes_text img.iig-generated-image,
 #chat .mes_text img[data-iig-instruction],
-#sdw_image {
+#sdw_image,
+#glw_image,
+#reel_image {
     transition: filter 180ms ease;
 }
 
 body.vlw-on #chat .mes_text img.iig-generated-image:not(.iig-error-image):not([src*="error.svg"]),
 body.vlw-on #chat .mes_text img[data-iig-instruction]:not(.iig-error-image):not([src*="error.svg"]),
-body.vlw-on #sdw_image {
+body.vlw-on #sdw_image,
+body.vlw-on #glw_image,
+body.vlw-on #reel_image {
     /* !important: в живой таверне чей-то CSS перебивал блюр на картинках Фрейма. */
     filter: blur(var(--vlw-blur, 28px)) brightness(var(--vlw-dim, 0.45)) !important;
     cursor: default;
@@ -56,12 +60,14 @@ body:not(.vlw-on) .vlw-eye {
     }
 }
 
-/* Сайд: своя кнопка, срисованная со стекла Фрейма. */
-#sdw_image_wrap {
+/* Окна Сайда, Глинта и Рила: своя кнопка, срисованная со стекла Фрейма. */
+#sdw_image_wrap,
+#glw_image_wrap,
+#reel_image_wrap {
     position: relative;
 }
 
-.vlw-eye-sdw {
+.vlw-eye-win {
     position: absolute;
     left: 8px;
     bottom: 8px;
@@ -87,25 +93,27 @@ body:not(.vlw-on) .vlw-eye {
     transition: opacity 0.18s ease, transform 0.18s ease, background 0.15s ease;
 }
 
-#sdw_image_wrap:hover > .vlw-eye-sdw,
-.vlw-eye-sdw:focus-visible {
+#sdw_image_wrap:hover > .vlw-eye-win,
+#glw_image_wrap:hover > .vlw-eye-win,
+#reel_image_wrap:hover > .vlw-eye-win,
+.vlw-eye-win:focus-visible {
     opacity: 1;
     pointer-events: auto;
     transform: scale(1);
 }
 
-.vlw-eye-sdw:hover {
+.vlw-eye-win:hover {
     background: rgba(12, 12, 14, 0.82);
 }
 
-.vlw-eye-sdw:focus-visible {
+.vlw-eye-win:focus-visible {
     outline: 2px solid var(--vlw-accent);
     outline-offset: 2px;
 }
 
-/* Без ховера (телефон, планшет) глаз в Сайде виден всегда. */
+/* Без ховера (телефон, планшет) глаз в окнах виден всегда. */
 @media (hover: none), (pointer: coarse) {
-    .vlw-eye-sdw {
+    .vlw-eye-win {
         width: 44px;
         height: 44px;
         opacity: 1;
@@ -118,7 +126,9 @@ body:not(.vlw-on) .vlw-eye {
     #chat .mes_text img.iig-generated-image,
     #chat .mes_text img[data-iig-instruction],
     #sdw_image,
-    .vlw-eye-sdw {
+    #glw_image,
+    #reel_image,
+    .vlw-eye-win {
         transition: none;
     }
 }

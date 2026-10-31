@@ -1,5 +1,5 @@
 /**
- * Veilweaver — вуаль для сгенерированных картинок Frameweaver и Sideweaver.
+ * Veilweaver — вуаль для сгенерированных картинок Frameweaver, Sideweaver, Glintweaver и Reel.
  * Форк ST-ImageBlur (Nufahi), переписанный так, чтобы не вешать таверну.
  *
  * Принципы:
@@ -12,6 +12,7 @@
  * Этап 1: настройки, панель, CSS-блюр, глушение кликов по мутным картинкам.
  * Этап 2: глазики во Фрейме и Сайде, память открытых картинок до перезагрузки.
  * Этап 3: пункты в меню палочки, предохранитель от зацикливания.
+ * 1.1.0: окна Glintweaver и Reel — по той же логике, что окно Сайда.
  */
 (function () {
     'use strict';
@@ -22,16 +23,25 @@
     const EYE_CLASS = 'vlw-eye';
     const REVEALED_STYLE_ID = 'vlw_revealed_style';
 
+    // Окна-соседи: Сайд, Глинт и Рил устроены одинаково — обёртка + картинка с префиксом.
+    // Новое окно такого же вида добавляется сюда одной строкой (и парой селекторов в style.css).
+    const WINDOWS = ['sdw', 'glw', 'reel'].map((prefix) => ({
+        wrap: `#${prefix}_image_wrap`,
+        image: `#${prefix}_image`,
+        imageId: `${prefix}_image`,
+    }));
+    const WINDOW_IMAGE_IDS = new Set(WINDOWS.map((w) => w.imageId));
+    const WINDOW_WRAPS = WINDOWS.map((w) => w.wrap).join(', ');
+
     // Картинки под вуалью. Те же селекторы продублированы в style.css — меняются парой.
     const VEIL_SELECTOR = [
         '#chat .mes_text img.iig-generated-image:not(.iig-error-image):not([src*="error.svg"])',
         '#chat .mes_text img[data-iig-instruction]:not(.iig-error-image):not([src*="error.svg"])',
-        '#sdw_image',
+        ...WINDOWS.map((w) => w.image),
     ].join(', ');
 
-    // Обёртки, куда садится глаз.
+    // Обёртки Фрейма, куда садится глаз.
     const FW_WRAPPER = '#chat .iig-image-wrapper:not(.iig-placeholder-wrapper)';
-    const SDW_WRAPPER = '#sdw_image_wrap';
 
     // Кнопка «развернуть» Фрейма — у мутной картинки её глушим.
     const FW_VIEW_BUTTON = '#chat .iig-image-wrapper .iig-action-view';
@@ -133,8 +143,8 @@
         style.textContent = [...revealed].map((src) => {
             const attr = `[src="${CSS.escape(src)}"]`;
             return `body.${BODY_CLASS} img${attr}${boost} { filter: none !important; cursor: zoom-in; }
-:is(.iig-image-wrapper, #sdw_image_wrap):has(> img${attr}) > .${EYE_CLASS} .vlw-ico-reveal { display: none; }
-:is(.iig-image-wrapper, #sdw_image_wrap):has(> img${attr}) > .${EYE_CLASS} .vlw-ico-hide { display: inline-block; }`;
+:is(.iig-image-wrapper, ${WINDOW_WRAPS}):has(> img${attr}) > .${EYE_CLASS} .vlw-ico-reveal { display: none; }
+:is(.iig-image-wrapper, ${WINDOW_WRAPS}):has(> img${attr}) > .${EYE_CLASS} .vlw-ico-hide { display: inline-block; }`;
         }).join('\n');
     }
 
@@ -199,12 +209,13 @@
             wrapper.appendChild(eye);
         }
 
-        const sdwWrap = document.querySelector(SDW_WRAPPER);
-        if (sdwWrap && !sdwWrap.querySelector(`:scope > .${EYE_CLASS}`)) {
-            if (fuseCount(sdwWrap)) return tripFuse(sdwWrap);
-            const eye = createEye('vlw-eye-sdw');
-            setEyeLabel(eye, sdwWrap.querySelector(':scope > img'));
-            sdwWrap.appendChild(eye);
+        for (const { wrap } of WINDOWS) {
+            const windowWrap = document.querySelector(wrap);
+            if (!windowWrap || windowWrap.querySelector(`:scope > .${EYE_CLASS}`)) continue;
+            if (fuseCount(windowWrap)) return tripFuse(windowWrap);
+            const eye = createEye('vlw-eye-win');
+            setEyeLabel(eye, windowWrap.querySelector(':scope > img'));
+            windowWrap.appendChild(eye);
         }
     }
 
@@ -234,7 +245,7 @@
             observer = new MutationObserver(onMutations);
             const chat = document.getElementById('chat');
             if (chat) observer.observe(chat, { childList: true, subtree: true });
-            // Окно Сайда вставляется прямо в <body> — ловим его появление без subtree.
+            // Окна Сайда, Глинта и Рила вставляются прямо в <body> — ловим их появление без subtree.
             observer.observe(document.body, { childList: true });
         }
         schedulePass();
@@ -286,7 +297,7 @@
     }
 
     /**
-     * Слушаем window в фазе захвата — раньше и Фрейма (#chat), и Сайда (сама картинка).
+     * Слушаем window в фазе захвата — раньше и Фрейма (#chat), и окон-соседей (сама картинка).
      * Глаз: открыть/спрятать. Мутная картинка: на весь экран не открывается.
      */
     function onClickCapture(event) {
@@ -308,7 +319,7 @@
         }
 
         if (!isVeiled(target)) return;
-        if (target.id === 'sdw_image') return swallow(event);
+        if (WINDOW_IMAGE_IDS.has(target.id)) return swallow(event);
         if (!FW_TAP_MODE) swallow(event);
     }
 
@@ -339,7 +350,7 @@
                                 <span class="vlw-range-head"><strong>Яркость скрытой картинки</strong><output id="vlw_dim_value">${state.dim} %</output></span>
                                 <input id="vlw_dim" type="range" min="${DIM_RANGE[0]}" max="${DIM_RANGE[1]}" step="5" value="${state.dim}">
                             </label>
-                            <p class="vlw-hint"><i class="fa-solid fa-circle-info"></i> Глазик в левом нижнем углу картинки открывает и прячет её. Открытые картинки помнятся до перезагрузки страницы. Работает с Frameweaver и Sideweaver.</p>
+                            <p class="vlw-hint"><i class="fa-solid fa-circle-info"></i> Глазик в левом нижнем углу картинки открывает и прячет её. Открытые картинки помнятся до перезагрузки страницы. Работает с Frameweaver, Sideweaver, Glintweaver и Reel.</p>
                         </div>
                     </div>
                 </div>
