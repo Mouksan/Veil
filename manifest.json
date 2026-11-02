@@ -1,12 +1,12 @@
 {
-    "display_name": "Veilweaver",
+    "display_name": "Veil",
     "loading_order": 110,
     "requires": [],
     "optional": [],
     "js": "index.js",
     "css": "style.css",
     "author": "Mouksan",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "homePage": "https://github.com/Mouksan/veilweaver",
     "auto_update": false
 }

@@ -1,5 +1,6 @@
 /**
- * Veilweaver — вуаль для сгенерированных картинок Frameweaver, Sideweaver, Glintweaver и Reel.
+ * Veil (бывший Veilweaver) — вуаль для сгенерированных картинок Frameweaver, Koma, Glint и Reel.
+ * Внутренние имена (ключ настроек veilweaver, префикс vlw-) не меняются — настройки не слетают.
  * Форк ST-ImageBlur (Nufahi), переписанный так, чтобы не вешать таверну.
  *
  * Принципы:
@@ -18,7 +19,7 @@
     'use strict';
 
     const SETTINGS_KEY = 'veilweaver';
-    const LOG = '[Veilweaver]';
+    const LOG = '[Veil]';
     const BODY_CLASS = 'vlw-on';
     const EYE_CLASS = 'vlw-eye';
     const REVEALED_STYLE_ID = 'vlw_revealed_style';
@@ -59,7 +60,7 @@
         hide: 'Спрятать картинку',
         wandToggle: 'Вуаль',
         wandHideAll: 'Спрятать всё обратно',
-        fuseTitle: 'Veilweaver',
+        fuseTitle: 'Veil',
         fuseBody: 'Вуаль поймала зацикливание и остановилась. Перезагрузи страницу.',
     };
 
@@ -330,7 +331,7 @@
             <div id="vlw_settings" class="vlw-settings">
                 <div class="inline-drawer">
                     <div class="inline-drawer-toggle inline-drawer-header">
-                        <b><i class="fa-solid fa-eye-slash"></i> Veilweaver</b>
+                        <b><i class="fa-solid fa-eye-slash"></i> 「 VEIL 」</b>
                         <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
                     </div>
                     <div class="inline-drawer-content">
@@ -350,7 +351,7 @@
                                 <span class="vlw-range-head"><strong>Яркость скрытой картинки</strong><output id="vlw_dim_value">${state.dim} %</output></span>
                                 <input id="vlw_dim" type="range" min="${DIM_RANGE[0]}" max="${DIM_RANGE[1]}" step="5" value="${state.dim}">
                             </label>
-                            <p class="vlw-hint"><i class="fa-solid fa-circle-info"></i> Глазик в левом нижнем углу картинки открывает и прячет её. Открытые картинки помнятся до перезагрузки страницы. Работает с Frameweaver, Sideweaver, Glintweaver и Reel.</p>
+                            <p class="vlw-hint"><i class="fa-solid fa-circle-info"></i> Глазик в левом нижнем углу картинки открывает и прячет её. Открытые картинки помнятся до перезагрузки страницы. Работает с Frameweaver, Koma, Glint и Reel.</p>
                         </div>
                     </div>
                 </div>
