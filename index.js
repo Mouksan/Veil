@@ -26,7 +26,8 @@
 
     // Окна-соседи: Сайд, Глинт и Рил устроены одинаково — обёртка + картинка с префиксом.
     // Новое окно такого же вида добавляется сюда одной строкой (и парой селекторов в style.css).
-    const WINDOWS = ['sdw', 'glw', 'reel'].map((prefix) => ({
+    // sdw_free — окошко «Свободная сцена» в Коме.
+    const WINDOWS = ['sdw', 'sdw_free', 'glw', 'reel'].map((prefix) => ({
         wrap: `#${prefix}_image_wrap`,
         image: `#${prefix}_image`,
         imageId: `${prefix}_image`,

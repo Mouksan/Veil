@@ -13,6 +13,7 @@
 #chat .mes_text img.iig-generated-image,
 #chat .mes_text img[data-iig-instruction],
 #sdw_image,
+#sdw_free_image,
 #glw_image,
 #reel_image {
     transition: filter 180ms ease;
@@ -21,6 +22,7 @@
 body.vlw-on #chat .mes_text img.iig-generated-image:not(.iig-error-image):not([src*="error.svg"]),
 body.vlw-on #chat .mes_text img[data-iig-instruction]:not(.iig-error-image):not([src*="error.svg"]),
 body.vlw-on #sdw_image,
+body.vlw-on #sdw_free_image,
 body.vlw-on #glw_image,
 body.vlw-on #reel_image {
     /* !important: в живой таверне чей-то CSS перебивал блюр на картинках Фрейма. */
@@ -62,6 +64,7 @@ body:not(.vlw-on) .vlw-eye {
 
 /* Окна Сайда, Глинта и Рила: своя кнопка, срисованная со стекла Фрейма. */
 #sdw_image_wrap,
+#sdw_free_image_wrap,
 #glw_image_wrap,
 #reel_image_wrap {
     position: relative;
@@ -94,6 +97,7 @@ body:not(.vlw-on) .vlw-eye {
 }
 
 #sdw_image_wrap:hover > .vlw-eye-win,
+#sdw_free_image_wrap:hover > .vlw-eye-win,
 #glw_image_wrap:hover > .vlw-eye-win,
 #reel_image_wrap:hover > .vlw-eye-win,
 .vlw-eye-win:focus-visible {
@@ -126,6 +130,7 @@ body:not(.vlw-on) .vlw-eye {
     #chat .mes_text img.iig-generated-image,
     #chat .mes_text img[data-iig-instruction],
     #sdw_image,
+    #sdw_free_image,
     #glw_image,
     #reel_image,
     .vlw-eye-win {
